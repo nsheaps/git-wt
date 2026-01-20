@@ -30,17 +30,24 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@v2
 
+      - name: Setup yarn via corepack
+        run: |
+          corepack enable
+          corepack install
+
+      - name: Install dependencies
+        run: yarn install
+
       - name: Run release-it
         id: release
         run: |
-          # Run release-it (mise installs it via mise.toml)
-          if release-it --ci; then
+          # Run release-it with conventional commits
+          if yarn release-it --ci; then
             echo "released=true" >> "$GITHUB_OUTPUT"
-            # Get version from latest tag
-            TAG=$(git describe --tags --abbrev=0)
-            VERSION="${TAG#v}"
+            # Get version from package.json (updated by release-it)
+            VERSION=$(node -p "require('./package.json').version")
             echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+            echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
           else
             echo "No release created"
             echo "released=false" >> "$GITHUB_OUTPUT"
