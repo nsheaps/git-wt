@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.5](https://github.com/nsheaps/git-wt/compare/v0.2.4...v0.2.5) (2026-01-20)
+
+### Bug Fixes
+
+* rename formula to git-wt and fix checkout credentials ([7107cf1](https://github.com/nsheaps/git-wt/commit/7107cf13a33706b7979c7b82081a1241cdc92d2d))
+
 ## [0.2.4](https://github.com/nsheaps/git-wt/compare/v0.2.3...v0.2.4) (2026-01-20)
 
 ### Bug Fixes
