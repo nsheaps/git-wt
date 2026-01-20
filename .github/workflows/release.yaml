@@ -42,10 +42,11 @@ jobs:
           # Run release-it to bump version, update changelog, commit, and tag
           if yarn release-it --ci; then
             echo "released=true" >> "$GITHUB_OUTPUT"
-            # Get version from package.json (updated by release-it)
-            VERSION=$(node -p "require('./package.json').version")
+            # Get version from the latest git tag (created by release-it)
+            TAG=$(git describe --tags --abbrev=0)
+            VERSION="${TAG#v}"
             echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-            echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           else
             echo "No release created"
             echo "released=false" >> "$GITHUB_OUTPUT"
