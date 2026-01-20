@@ -2,16 +2,15 @@
   "git": {
     "commitMessage": "chore: release v${version}",
     "tagName": "v${version}",
-    "tagAnnotation": "Release v${version}"
+    "tagAnnotation": "Release v${version}",
+    "requireCleanWorkingDir": false
   },
   "github": {
     "release": true,
     "releaseName": "v${version}",
     "assets": ["bin/worktree-switcher"]
   },
-  "npm": {
-    "publish": false
-  },
+  "npm": false,
   "plugins": {
     "@release-it/conventional-changelog": {
       "preset": {

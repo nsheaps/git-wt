@@ -1,2 +1,4 @@
 [tools]
 node = "lts"
+"npm:release-it" = "latest"
+"npm:@release-it/conventional-changelog" = "latest"

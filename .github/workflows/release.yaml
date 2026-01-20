@@ -30,24 +30,19 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@v2
 
-      - name: Setup yarn via corepack
-        run: corepack install
-
-      - name: Install dependencies
-        run: yarn install
-
       - name: Run release-it
         id: release
         run: |
-          # Check if there are releasable commits
-          if ! yarn release-it --dry-run --ci 2>&1 | grep -q "empty changeset"; then
-            yarn release-it --ci
+          # Run release-it (mise installs it via mise.toml)
+          if release-it --ci; then
             echo "released=true" >> "$GITHUB_OUTPUT"
-            VERSION=$(node -p "require('./package.json').version")
+            # Get version from latest tag
+            TAG=$(git describe --tags --abbrev=0)
+            VERSION="${TAG#v}"
             echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-            echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           else
-            echo "No releasable commits found"
+            echo "No release created"
             echo "released=false" >> "$GITHUB_OUTPUT"
           fi
 
