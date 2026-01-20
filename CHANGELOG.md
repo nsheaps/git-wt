@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.1](https://github.com/nsheaps/git-wt/compare/v0.3.0...v0.3.1) (2026-01-20)
+
+### Bug Fixes
+
+* add retry logic for SHA256, show local branches only, exec shell on cd ([01e6f86](https://github.com/nsheaps/git-wt/commit/01e6f86232e3c0ba1d063f0f569b45175c79f559))
+
 ## [0.3.0](https://github.com/nsheaps/git-wt/compare/v0.2.5...v0.3.0) (2026-01-20)
 
 ### Features
