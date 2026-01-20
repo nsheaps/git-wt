@@ -7,10 +7,7 @@
     "getLatestTagFromAllRefs": true
   },
   "github": {
-    "release": true,
-    "releaseName": "v${version}",
-    "assets": ["bin/worktree-switcher"],
-    "tokenRef": "GITHUB_TOKEN"
+    "release": false
   },
   "npm": false,
   "plugins": {

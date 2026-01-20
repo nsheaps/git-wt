@@ -39,7 +39,7 @@ jobs:
       - name: Run release-it
         id: release
         run: |
-          # Run release-it with conventional commits
+          # Run release-it to bump version, update changelog, commit, and tag
           if yarn release-it --ci; then
             echo "released=true" >> "$GITHUB_OUTPUT"
             # Get version from package.json (updated by release-it)
@@ -51,12 +51,24 @@ jobs:
             echo "released=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Create GitHub release
+        if: steps.release.outputs.released == 'true'
+        run: |
+          gh release create "${{ steps.release.outputs.tag }}" \
+            bin/worktree-switcher \
+            --title "${{ steps.release.outputs.tag }}" \
+            --generate-notes
+
   update-homebrew:
     needs: release
     if: needs.release.outputs.released == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Get job context
+        id: context
+        uses: qoomon/actions--context@v4
 
       - name: Authenticate as GitHub App
         id: auth
@@ -121,16 +133,31 @@ jobs:
           sed -i 's/^          //' Formula/worktree-switcher.rb
 
       - name: Create PR to update formula with auto-merge
+        env:
+          RELEASE_URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.release.outputs.tag }}
+          JOB_URL: ${{ steps.context.outputs.job_html_url }}
+          VERSION: ${{ steps.release.outputs.version }}
+          TAG: ${{ steps.release.outputs.tag }}
         run: |
           cd homebrew-devsetup
-          BRANCH="bump-worktree-switcher-${{ steps.release.outputs.version }}"
+          BRANCH="bump-worktree-switcher-${VERSION}"
           git checkout -b "$BRANCH"
           git add Formula/worktree-switcher.rb
-          git commit -m "chore: update worktree-switcher to ${{ steps.release.outputs.version }}"
+          git commit -m "chore: update worktree-switcher to ${VERSION}"
           git push -u origin "$BRANCH"
+
+          # Create PR body file
+          cat > /tmp/pr-body.md << 'BODY_EOF'
+          Automated formula update from git-wt release
+          BODY_EOF
+          echo "" >> /tmp/pr-body.md
+          echo "**Release:** ${RELEASE_URL}" >> /tmp/pr-body.md
+          echo "**Workflow:** ${JOB_URL}" >> /tmp/pr-body.md
+
           PR_URL=$(gh pr create \
-            --title "chore: update worktree-switcher to ${{ steps.release.outputs.version }}" \
-            --body "Automated formula update from git-wt release ${{ steps.release.outputs.tag }}" \
+            --title "chore: update worktree-switcher to ${VERSION}" \
+            --body-file /tmp/pr-body.md \
             --base main)
           # Enable auto-merge with squash
           gh pr merge "$PR_URL" --auto --squash
+
