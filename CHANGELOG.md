@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.0](https://github.com/nsheaps/git-wt/compare/v0.2.5...v0.3.0) (2026-01-20)
+
+### Features
+
+* rename to git-wt and simplify (remove gh/jq deps) ([eb2986d](https://github.com/nsheaps/git-wt/commit/eb2986d6c3f8dec6ba34af8607ee55b90b4922c0))
+
 ## [0.2.5](https://github.com/nsheaps/git-wt/compare/v0.2.4...v0.2.5) (2026-01-20)
 
 ### Bug Fixes
