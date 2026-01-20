@@ -199,22 +199,10 @@ REPO_NAME=$(basename "$GIT_ROOT")
 # Check if we're in a worktree (not the main checkout)
 GIT_DIR=$(git -C "$GIT_ROOT" rev-parse --git-dir)
 if [[ "$GIT_DIR" == *".git/worktrees/"* ]]; then
-  # We're in a worktree - find the main checkout
+  # We're in a worktree - find the main checkout and use that for operations
   MAIN_CHECKOUT=$(git -C "$GIT_ROOT" rev-parse --path-format=absolute --git-common-dir | sed 's|/.git$||')
-
-  if [[ -n "$TARGET_BRANCH" ]]; then
-    # If branch specified, switch to it from main checkout
-    echo "Currently in a worktree. Switching context to main checkout..."
-    GIT_ROOT="$MAIN_CHECKOUT"
-  else
-    echo ""
-    gum style --border rounded --padding "0 1" --border-foreground 214 \
-      "Already in a worktree"
-    echo ""
-    echo "Main checkout: $MAIN_CHECKOUT"
-    echo "Current worktree: $GIT_ROOT"
-    exit 0
-  fi
+  GIT_ROOT="$MAIN_CHECKOUT"
+  REPO_NAME=$(basename "$GIT_ROOT")
 fi
 
 # Fetch from remote first
