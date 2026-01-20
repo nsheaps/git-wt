@@ -1,0 +1,94 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: bin/worktree-switcher
+          generate_release_notes: true
+
+  update-homebrew:
+    needs: release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate as GitHub App
+        id: auth
+        uses: ./.github/actions/github-app-auth
+        with:
+          app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
+          private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
+
+      - name: Get release info
+        id: release
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+
+          # Get SHA256 of the script
+          SHA256=$(curl -sL "https://github.com/${{ github.repository }}/releases/download/${GITHUB_REF_NAME}/worktree-switcher" | shasum -a 256 | cut -d' ' -f1)
+          echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
+          echo "tag=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+
+      - name: Clone homebrew-devsetup
+        run: |
+          gh repo clone nsheaps/homebrew-devsetup homebrew-devsetup
+
+      - name: Update formula
+        run: |
+          cd homebrew-devsetup
+
+          cat > Formula/worktree-switcher.rb << 'FORMULA_EOF'
+          # typed: false
+          # frozen_string_literal: true
+
+          class WorktreeSwitcher < Formula
+            desc "Interactive TUI for git worktree management"
+            homepage "https://github.com/nsheaps/git-wt"
+            url "https://github.com/nsheaps/git-wt/releases/download/${{ steps.release.outputs.tag }}/worktree-switcher"
+            sha256 "${{ steps.release.outputs.sha256 }}"
+            version "${{ steps.release.outputs.version }}"
+            license "MIT"
+
+            head do
+              url "https://github.com/nsheaps/git-wt.git", branch: "main"
+            end
+
+            depends_on "gum"
+            depends_on "gh"
+            depends_on "jq"
+
+            def install
+              if build.head?
+                bin.install "bin/worktree-switcher"
+              else
+                bin.install "worktree-switcher"
+              end
+            end
+
+            test do
+              assert_match "worktree-switcher", shell_output("#{bin}/worktree-switcher --help")
+            end
+          end
+          FORMULA_EOF
+
+      - name: Commit and push formula update
+        run: |
+          cd homebrew-devsetup
+          git add Formula/worktree-switcher.rb
+          git commit -m "chore: update worktree-switcher to ${{ steps.release.outputs.version }}" || exit 0
+          git push
