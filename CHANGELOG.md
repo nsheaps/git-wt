@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.4.1](https://github.com/nsheaps/git-wt/compare/v0.4.0...v0.4.1) (2026-01-20)
+
 ## [0.4.0](https://github.com/nsheaps/git-wt/compare/v0.3.2...v0.4.0) (2026-01-20)
 
 ### Features
