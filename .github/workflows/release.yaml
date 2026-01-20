@@ -51,8 +51,7 @@ jobs:
       - name: Update formula
         run: |
           cd homebrew-devsetup
-
-          cat > Formula/worktree-switcher.rb << 'FORMULA_EOF'
+          cat > Formula/worktree-switcher.rb << FORMULA_EOF
           # typed: false
           # frozen_string_literal: true
 
@@ -85,10 +84,18 @@ jobs:
             end
           end
           FORMULA_EOF
+          # Remove leading whitespace from heredoc
+          sed -i 's/^          //' Formula/worktree-switcher.rb
 
-      - name: Commit and push formula update
+      - name: Create PR to update formula
         run: |
           cd homebrew-devsetup
+          BRANCH="bump-worktree-switcher-${{ steps.release.outputs.version }}"
+          git checkout -b "$BRANCH"
           git add Formula/worktree-switcher.rb
-          git commit -m "chore: update worktree-switcher to ${{ steps.release.outputs.version }}" || exit 0
-          git push
+          git commit -m "chore: update worktree-switcher to ${{ steps.release.outputs.version }}"
+          git push -u origin "$BRANCH"
+          gh pr create \
+            --title "chore: update worktree-switcher to ${{ steps.release.outputs.version }}" \
+            --body "Automated formula update from git-wt release ${{ steps.release.outputs.tag }}" \
+            --base main
