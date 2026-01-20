@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.0](https://github.com/nsheaps/git-wt/compare/v0.3.2...v0.4.0) (2026-01-20)
+
+### Features
+
+* add background update check with notification ([d08efb7](https://github.com/nsheaps/git-wt/commit/d08efb7bfd996911f3e971775b9980ee2c6adb5c))
+
 ## [0.3.2](https://github.com/nsheaps/git-wt/compare/v0.3.1...v0.3.2) (2026-01-20)
 
 ### Bug Fixes
