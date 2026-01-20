@@ -21,6 +21,61 @@ set -euo pipefail
 
 SCAN_DIR="${HOME}/src"
 TARGET_BRANCH=""
+UPDATE_CHECK_FILE="/tmp/git-wt-update-check-$$"
+
+# Background update check - runs asynchronously
+check_for_updates() {
+  local current_version="$1"
+  # Strip leading 'v' if present for comparison
+  current_version="${current_version#v}"
+
+  # Skip if current version is 'dev' or empty
+  if [[ -z "$current_version" ]] || [[ "$current_version" == "dev" ]]; then
+    return
+  fi
+
+  # Check GitHub API for latest release (timeout after 2 seconds)
+  local latest_info
+  if latest_info=$(curl -sf --max-time 2 "https://api.github.com/repos/nsheaps/git-wt/releases/latest" 2>/dev/null); then
+    local latest_version
+    latest_version=$(echo "$latest_info" | grep -o '"tag_name": *"[^"]*"' | head -1 | sed 's/.*"tag_name": *"v\{0,1\}\([^"]*\)".*/\1/')
+
+    if [[ -n "$latest_version" ]] && [[ "$latest_version" != "$current_version" ]]; then
+      # Simple version comparison - check if latest is newer
+      # This works for semver: compare as strings after normalizing
+      if [[ "$(printf '%s\n%s' "$current_version" "$latest_version" | sort -V | tail -1)" == "$latest_version" ]] && \
+         [[ "$current_version" != "$latest_version" ]]; then
+        echo "UPDATE_AVAILABLE=$latest_version" > "$UPDATE_CHECK_FILE"
+      fi
+    fi
+  fi
+}
+
+# Start background update check
+CURRENT_VERSION=$(git describe --tags --always 2>/dev/null || echo 'dev')
+check_for_updates "$CURRENT_VERSION" &
+UPDATE_CHECK_PID=$!
+
+# Cleanup and show update notification on exit
+show_update_notification() {
+  # Wait briefly for background check (non-blocking if already done)
+  wait "$UPDATE_CHECK_PID" 2>/dev/null || true
+
+  # Check if update is available
+  if [[ -f "$UPDATE_CHECK_FILE" ]]; then
+    local update_info
+    update_info=$(cat "$UPDATE_CHECK_FILE" 2>/dev/null || true)
+    rm -f "$UPDATE_CHECK_FILE" 2>/dev/null || true
+
+    if [[ "$update_info" == UPDATE_AVAILABLE=* ]]; then
+      local new_version="${update_info#UPDATE_AVAILABLE=}"
+      echo ""
+      gum style --foreground 214 "A new release of git-wt is available: ${CURRENT_VERSION#v} → $new_version"
+      echo "To upgrade, run: npm update -g git-wt"
+    fi
+  fi
+}
+trap show_update_notification EXIT
 
 show_help() {
   sed -n '2,17p' "$0" | sed 's/^# //' | sed 's/^#//'
@@ -224,21 +279,27 @@ echo ""
 gum style --bold "Git Worktree Selector"
 echo ""
 
-# Get existing worktrees (excluding main)
+# Get existing worktrees (excluding main) and track their branches
 WORKTREES=()
+declare -A WORKTREE_BRANCHES
 while IFS= read -r line; do
   # Skip the main worktree
   if [[ "$line" != "$GIT_ROOT" ]]; then
     WORKTREES+=("$line")
+    # Track which branch this worktree is on for deduplication
+    local_branch=$(git -C "$line" branch --show-current 2>/dev/null || echo "")
+    if [[ -n "$local_branch" ]]; then
+      WORKTREE_BRANCHES["$local_branch"]=1
+    fi
   fi
 done < <(git -C "$GIT_ROOT" worktree list --porcelain | grep "^worktree " | cut -d' ' -f2-)
 
-# Build branch list from local branches only
+# Build branch list from local branches only (excluding branches with existing worktrees)
 declare -A BRANCHES
 
 # Get local branches
 while IFS= read -r branch; do
-  if [[ -n "$branch" ]]; then
+  if [[ -n "$branch" ]] && [[ -z "${WORKTREE_BRANCHES[$branch]:-}" ]]; then
     BRANCHES["$branch"]=1
   fi
 done < <(git -C "$GIT_ROOT" branch --format='%(refname:short)' 2>/dev/null || echo "")
@@ -261,8 +322,8 @@ done
 # Add option to switch repo (step "up")
 MENU_OPTIONS+=("🔄 (switch repository)")
 
-# Show selection menu
-SELECTED=$(printf '%s\n' "${MENU_OPTIONS[@]}" | gum filter --placeholder "Select or create worktree...")
+# Show selection menu (--no-sort keeps existing worktrees at top while filtering)
+SELECTED=$(printf '%s\n' "${MENU_OPTIONS[@]}" | gum filter --no-sort --placeholder "Select or create worktree...")
 
 if [[ -z "$SELECTED" ]]; then
   echo "Cancelled"
