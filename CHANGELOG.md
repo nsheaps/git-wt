@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.3](https://github.com/nsheaps/git-wt/compare/v0.2.2...v0.2.3) (2026-01-20)
+
+### Bug Fixes
+
+* add actions:read permission for job context ([68fb354](https://github.com/nsheaps/git-wt/commit/68fb354ada591413a688c2855f04a56e4ea4037a))
+
 ## [0.2.2](https://github.com/nsheaps/git-wt/compare/v0.2.1...v0.2.2) (2026-01-20)
 
 ### Bug Fixes
