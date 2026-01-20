@@ -8,24 +8,8 @@
   "github": {
     "release": true,
     "releaseName": "v${version}",
-    "assets": ["bin/worktree-switcher"]
+    "assets": ["bin/worktree-switcher"],
+    "autoGenerate": true
   },
-  "npm": false,
-  "plugins": {
-    "@release-it/conventional-changelog": {
-      "preset": {
-        "name": "conventionalcommits",
-        "types": [
-          { "type": "feat", "section": "Features" },
-          { "type": "fix", "section": "Bug Fixes" },
-          { "type": "perf", "section": "Performance" },
-          { "type": "refactor", "section": "Refactoring" },
-          { "type": "docs", "section": "Documentation" },
-          { "type": "chore", "hidden": true }
-        ]
-      },
-      "infile": "CHANGELOG.md",
-      "header": "# Changelog"
-    }
-  }
+  "npm": false
 }
