@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.3.2](https://github.com/nsheaps/git-wt/compare/v0.3.1...v0.3.2) (2026-01-20)
+
+### Bug Fixes
+
+* open selector when already in worktree instead of exiting ([f81149a](https://github.com/nsheaps/git-wt/commit/f81149a0184578ded97ce861b32d6887ec0d1f61))
+
 ## [0.3.1](https://github.com/nsheaps/git-wt/compare/v0.3.0...v0.3.1) (2026-01-20)
 
 ### Bug Fixes
