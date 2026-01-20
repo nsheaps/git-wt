@@ -30,11 +30,6 @@ jobs:
       - name: Setup mise
         uses: jdx/mise-action@v2
 
-      - name: Setup yarn via corepack
-        run: |
-          corepack enable
-          corepack install
-
       - name: Install dependencies
         run: yarn install
 
