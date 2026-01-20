@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.4](https://github.com/nsheaps/git-wt/compare/v0.2.3...v0.2.4) (2026-01-20)
+
+### Bug Fixes
+
+* use GITHUB_JOB_URL env var for workflow link ([a741de4](https://github.com/nsheaps/git-wt/commit/a741de4ba406b4acdc1b41e217661bc339b62d9f))
+
 ## [0.2.3](https://github.com/nsheaps/git-wt/compare/v0.2.2...v0.2.3) (2026-01-20)
 
 ### Bug Fixes
