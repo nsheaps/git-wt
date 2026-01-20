@@ -8,7 +8,7 @@ Interactive TUI for git worktree management.
 
 ```bash
 brew tap nsheaps/devsetup
-brew install worktree-switcher
+brew install git-wt
 ```
 
 ### Manual
@@ -22,7 +22,7 @@ export PATH="$PATH:$(pwd)/git-wt/bin"
 ## Usage
 
 ```bash
-worktree-switcher [OPTIONS] [BRANCH]
+git-wt [OPTIONS] [BRANCH]
 ```
 
 ### Arguments
@@ -35,40 +35,32 @@ worktree-switcher [OPTIONS] [BRANCH]
 
 | Option           | Description                                      |
 | ---------------- | ------------------------------------------------ |
-| `--no-status`    | Skip fetching branch status (faster)             |
 | `--scan-dir DIR` | Directory to scan for git repos (default: ~/src) |
-| `--repo REPO`    | GitHub repo (owner/name) to clone if not in repo |
 | `-h, --help`     | Show help message                                |
+| `-v, --version`  | Show version                                     |
 
 ### Examples
 
 ```bash
 # Interactive mode - select from branches
-worktree-switcher
+git-wt
 
 # Direct branch switch - find or create worktree for branch
-worktree-switcher feature/my-branch
+git-wt feature/my-branch
 
-# Clone a repo and create worktree
-worktree-switcher --repo nsheaps/git-wt feature/my-branch
-
-# Faster mode without status checks
-worktree-switcher --no-status
+# Scan a different directory for repos
+git-wt --scan-dir ~/projects
 ```
 
 ## Features
 
 - **Direct branch argument**: Pass a branch name to skip interactive selection
 - **Smart branch detection**: Finds local, remote, or creates new branches
-- **Repo discovery**: When not in a git repo, offers to:
-  - Scan `~/src` (or custom dir) for existing repos
-  - Clone from GitHub by selecting from org/user repos
-  - Enter a path manually
+- **Repo discovery**: When not in a git repo, scans `~/src` for existing repos
 - **"Switch repository" option**: Step up to change repos during selection
 - Shows banner if already in a worktree
 - Create new worktrees with new branches
 - Select from existing worktrees
-- Branch priority (your PRs > your branches > other branches)
 - Worktrees created at: `../${repo}.worktrees/${branch}`
 
 ## Dependencies
@@ -76,8 +68,6 @@ worktree-switcher --no-status
 | Tool  | Purpose             | Installation          |
 | ----- | ------------------- | --------------------- |
 | `gum` | Interactive prompts | `brew install gum`    |
-| `gh`  | GitHub CLI          | `brew install gh`     |
-| `jq`  | JSON processing     | `brew install jq`     |
 | `git` | Version control     | Usually pre-installed |
 
 ## License

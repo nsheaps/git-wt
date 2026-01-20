@@ -57,7 +57,7 @@ jobs:
         if: steps.release.outputs.released == 'true'
         run: |
           gh release create "${{ steps.release.outputs.tag }}" \
-            bin/worktree-switcher \
+            bin/git-wt \
             --title "${{ steps.release.outputs.tag }}" \
             --generate-notes
 
@@ -90,7 +90,7 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
           # Get SHA256 of the script from release
-          SHA256=$(curl -sL "https://github.com/${{ github.repository }}/releases/download/${TAG}/worktree-switcher" | shasum -a 256 | cut -d' ' -f1)
+          SHA256=$(curl -sL "https://github.com/${{ github.repository }}/releases/download/${TAG}/git-wt" | shasum -a 256 | cut -d' ' -f1)
           echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
 
       - name: Clone homebrew-devsetup
@@ -107,7 +107,7 @@ jobs:
           class GitWt < Formula
             desc "Interactive TUI for git worktree management"
             homepage "https://github.com/nsheaps/git-wt"
-            url "https://github.com/nsheaps/git-wt/releases/download/${{ steps.release.outputs.tag }}/worktree-switcher"
+            url "https://github.com/nsheaps/git-wt/releases/download/${{ steps.release.outputs.tag }}/git-wt"
             sha256 "${{ steps.release.outputs.sha256 }}"
             version "${{ steps.release.outputs.version }}"
             license "MIT"
@@ -117,19 +117,17 @@ jobs:
             end
 
             depends_on "gum"
-            depends_on "gh"
-            depends_on "jq"
 
             def install
               if build.head?
-                bin.install "bin/worktree-switcher" => "git-wt"
+                bin.install "bin/git-wt"
               else
-                bin.install "worktree-switcher" => "git-wt"
+                bin.install "git-wt"
               end
             end
 
             test do
-              assert_match "worktree-switcher", shell_output("#{bin}/git-wt --help")
+              assert_match "git-wt", shell_output("#{bin}/git-wt --help")
             end
           end
           FORMULA_EOF
