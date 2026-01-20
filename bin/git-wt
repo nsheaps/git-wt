@@ -245,7 +245,7 @@ while IFS= read -r line; do
   fi
 done < <(git -C "$GIT_ROOT" worktree list --porcelain | grep "^worktree " | cut -d' ' -f2-)
 
-# Build branch list from local and remote refs
+# Build branch list from local branches only
 declare -A BRANCHES
 
 # Get local branches
@@ -254,16 +254,6 @@ while IFS= read -r branch; do
     BRANCHES["$branch"]=1
   fi
 done < <(git -C "$GIT_ROOT" branch --format='%(refname:short)' 2>/dev/null || echo "")
-
-# Get remote branches (without origin/ prefix, excluding HEAD)
-while IFS= read -r branch; do
-  if [[ -n "$branch" ]] && [[ "$branch" != "origin/HEAD" ]]; then
-    local_name="${branch#origin/}"
-    if [[ -z "${BRANCHES[$local_name]:-}" ]]; then
-      BRANCHES["$local_name"]=1
-    fi
-  fi
-done < <(git -C "$GIT_ROOT" branch -r --format='%(refname:short)' 2>/dev/null || echo "")
 
 # Build menu options
 MENU_OPTIONS=()
@@ -322,22 +312,17 @@ case "$SELECTED" in
     mkdir -p "$(dirname "$GIT_ROOT/$WORKTREE_PATH")"
     git -C "$GIT_ROOT" worktree add -b "$BRANCH_NAME" "$WORKTREE_PATH" "$BASE_BRANCH"
 
+    FINAL_PATH="$(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
     echo ""
-    echo "Created worktree at: $(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+    echo "Created worktree at: $FINAL_PATH"
     echo "Branch: $BRANCH_NAME (based on $BASE_BRANCH)"
-
-    # Print the path for cd (can be captured by caller)
-    echo ""
-    echo "WORKTREE_PATH=$(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
     ;;
 
   "📂 [existing]"*)
     # Extract path from selection
-    WORKTREE_PATH=$(echo "$SELECTED" | sed 's/.*→ //')
+    FINAL_PATH=$(echo "$SELECTED" | sed 's/.*→ //')
     echo ""
-    echo "Selected existing worktree: $WORKTREE_PATH"
-    echo ""
-    echo "WORKTREE_PATH=$WORKTREE_PATH"
+    echo "Selected existing worktree: $FINAL_PATH"
     ;;
 
   "🔄 (switch repository)")
@@ -356,7 +341,8 @@ case "$SELECTED" in
     WORKTREE_PATH="../${REPO_NAME}.worktrees/${SAFE_BRANCH}"
 
     if [[ -d "$GIT_ROOT/$WORKTREE_PATH" ]]; then
-      echo "Worktree already exists at: $(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+      FINAL_PATH="$(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+      echo "Worktree already exists at: $FINAL_PATH"
     else
       mkdir -p "$(dirname "$GIT_ROOT/$WORKTREE_PATH")"
 
@@ -368,11 +354,17 @@ case "$SELECTED" in
       else
         git -C "$GIT_ROOT" worktree add "$WORKTREE_PATH" "$BRANCH_NAME"
       fi
-      echo "Created worktree at: $(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+      FINAL_PATH="$(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
+      echo "Created worktree at: $FINAL_PATH"
     fi
 
     echo "Branch: $BRANCH_NAME"
-    echo ""
-    echo "WORKTREE_PATH=$(cd "$GIT_ROOT/$WORKTREE_PATH" && pwd)"
     ;;
 esac
+
+# Change to worktree directory and start new shell
+if [[ -n "${FINAL_PATH:-}" ]] && [[ -d "$FINAL_PATH" ]]; then
+  echo ""
+  echo "Changing to: $FINAL_PATH"
+  cd "$FINAL_PATH" && exec "$SHELL"
+fi

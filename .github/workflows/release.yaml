@@ -89,9 +89,26 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
-          # Get SHA256 of the script from release
-          SHA256=$(curl -sL "https://github.com/${{ github.repository }}/releases/download/${TAG}/git-wt" | shasum -a 256 | cut -d' ' -f1)
-          echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
+          # Download asset using gh CLI (more reliable than curl for fresh releases)
+          # Retry up to 5 times with 10s delay to handle CDN propagation
+          for i in {1..5}; do
+            echo "Attempt $i: Downloading release asset..."
+            if gh release download "$TAG" --pattern 'git-wt' --output /tmp/git-wt --clobber; then
+              # Verify it's actually the script (not an error page)
+              if head -1 /tmp/git-wt | grep -q '^#!/'; then
+                SHA256=$(shasum -a 256 /tmp/git-wt | cut -d' ' -f1)
+                echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
+                echo "Successfully got SHA256: $SHA256"
+                exit 0
+              else
+                echo "Downloaded file doesn't look like a script, retrying..."
+              fi
+            fi
+            echo "Download failed or invalid, waiting 10s before retry..."
+            sleep 10
+          done
+          echo "Failed to download release asset after 5 attempts"
+          exit 1
 
       - name: Clone homebrew-devsetup
         run: |
