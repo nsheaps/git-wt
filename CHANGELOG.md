@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.2](https://github.com/nsheaps/git-wt/compare/v0.2.1...v0.2.2) (2026-01-20)
+
+### Bug Fixes
+
+* get version from git tag instead of package.json ([c89f346](https://github.com/nsheaps/git-wt/commit/c89f3463850ac89879ae9be3bf7677827d8577ae))
+
 ## [0.2.1](https://github.com/nsheaps/git-wt/compare/v0.2.0...v0.2.1) (2026-01-20)
 
 ### Bug Fixes
