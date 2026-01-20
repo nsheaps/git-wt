@@ -27,6 +27,9 @@ jobs:
           app-id: ${{ secrets.AUTOMATION_GITHUB_APP_ID }}
           private-key: ${{ secrets.AUTOMATION_GITHUB_APP_PRIVATE_KEY }}
 
+      - name: Fetch tags
+        run: git fetch --tags --force
+
       - name: Setup mise
         uses: jdx/mise-action@v2
 
