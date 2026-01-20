@@ -67,6 +67,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: Get job context
         id: context
@@ -98,11 +100,11 @@ jobs:
       - name: Update formula
         run: |
           cd homebrew-devsetup
-          cat > Formula/worktree-switcher.rb << FORMULA_EOF
+          cat > Formula/git-wt.rb << FORMULA_EOF
           # typed: false
           # frozen_string_literal: true
 
-          class WorktreeSwitcher < Formula
+          class GitWt < Formula
             desc "Interactive TUI for git worktree management"
             homepage "https://github.com/nsheaps/git-wt"
             url "https://github.com/nsheaps/git-wt/releases/download/${{ steps.release.outputs.tag }}/worktree-switcher"
@@ -120,19 +122,19 @@ jobs:
 
             def install
               if build.head?
-                bin.install "bin/worktree-switcher"
+                bin.install "bin/worktree-switcher" => "git-wt"
               else
-                bin.install "worktree-switcher"
+                bin.install "worktree-switcher" => "git-wt"
               end
             end
 
             test do
-              assert_match "worktree-switcher", shell_output("#{bin}/worktree-switcher --help")
+              assert_match "worktree-switcher", shell_output("#{bin}/git-wt --help")
             end
           end
           FORMULA_EOF
           # Remove leading whitespace from heredoc
-          sed -i 's/^          //' Formula/worktree-switcher.rb
+          sed -i 's/^          //' Formula/git-wt.rb
 
       - name: Create PR to update formula with auto-merge
         env:
@@ -142,10 +144,10 @@ jobs:
           TAG: ${{ steps.release.outputs.tag }}
         run: |
           cd homebrew-devsetup
-          BRANCH="bump-worktree-switcher-${VERSION}"
+          BRANCH="bump-git-wt-${VERSION}"
           git checkout -b "$BRANCH"
-          git add Formula/worktree-switcher.rb
-          git commit -m "chore: update worktree-switcher to ${VERSION}"
+          git add Formula/git-wt.rb
+          git commit -m "chore: update git-wt to ${VERSION}"
           git push -u origin "$BRANCH"
 
           # Create PR body file
@@ -157,7 +159,7 @@ jobs:
           echo "**Workflow:** ${JOB_URL}" >> /tmp/pr-body.md
 
           PR_URL=$(gh pr create \
-            --title "chore: update worktree-switcher to ${VERSION}" \
+            --title "chore: update git-wt to ${VERSION}" \
             --body-file /tmp/pr-body.md \
             --base main)
           # Enable auto-merge with squash
