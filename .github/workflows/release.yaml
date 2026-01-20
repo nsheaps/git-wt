@@ -137,7 +137,7 @@ jobs:
       - name: Create PR to update formula with auto-merge
         env:
           RELEASE_URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.release.outputs.tag }}
-          JOB_URL: ${{ steps.context.outputs.job_html_url }}
+          JOB_URL: ${{ env.GITHUB_JOB_URL }}
           VERSION: ${{ steps.release.outputs.version }}
           TAG: ${{ steps.release.outputs.tag }}
         run: |
