@@ -1,18 +1,14 @@
 {
-  "hooks": {
-    "before:git:commit": "git reset HEAD bin/git-wt"
-  },
   "git": {
+    "commit": true,
     "commitMessage": "chore: release v${version} [skip ci]",
-    "tagName": "v${version}",
-    "tagAnnotation": "Release v${version}",
+    "tag": false,
+    "push": false,
     "requireCleanWorkingDir": false,
     "getLatestTagFromAllRefs": true
   },
   "github": {
-    "release": true,
-    "autoGenerate": true,
-    "assets": ["bin/git-wt"]
+    "release": false
   },
   "npm": false,
   "plugins": {

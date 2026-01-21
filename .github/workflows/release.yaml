@@ -52,18 +52,11 @@ jobs:
             echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Embed version in script
-        if: steps.next-version.outputs.will-release == 'true'
-        run: |
-          # Embed version before release-it commits, so the tagged commit has it
-          sed -i -E 's/GIT_WT_VERSION="(__VERSION__|v[0-9]+\.[0-9]+\.[0-9]+)"/GIT_WT_VERSION="${{ steps.next-version.outputs.tag }}"/' bin/git-wt
-
-      - name: Run release-it
+      - name: Run release-it for changelog
         id: release
         if: steps.next-version.outputs.will-release == 'true'
         run: |
-          # Run release-it to bump version, update changelog, commit, and tag
-          # The embedded version will be included in the tagged commit
+          # release-it updates changelog and commits (no tag, no push)
           if yarn release-it --ci; then
             echo "released=true" >> "$GITHUB_OUTPUT"
             echo "version=${{ steps.next-version.outputs.version }}" >> "$GITHUB_OUTPUT"
@@ -73,14 +66,48 @@ jobs:
             echo "released=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Reset version to placeholder
+      - name: Push changelog to main
+        if: steps.release.outputs.released == 'true'
+        run: git push origin main
+
+      - name: Create tagged release commit
         if: steps.release.outputs.released == 'true'
         run: |
-          # Reset to __VERSION__ so main branch stays clean
-          sed -i -E 's/GIT_WT_VERSION="v[0-9]+\.[0-9]+\.[0-9]+"/GIT_WT_VERSION="__VERSION__"/' bin/git-wt
+          TAG="${{ steps.release.outputs.tag }}"
+
+          # Embed version in script
+          sed -i -E 's/GIT_WT_VERSION="(__VERSION__|v[0-9]+\.[0-9]+\.[0-9]+)"/GIT_WT_VERSION="'"$TAG"'"/' bin/git-wt
+
+          # Commit with embedded version (this commit will NOT be on main)
           git add bin/git-wt
-          git commit -m "chore: reset version placeholder [skip ci]"
-          git push
+          git commit -m "release: $TAG"
+
+          # Tag this commit
+          git tag -a "$TAG" -m "Release $TAG"
+
+          # Push ONLY the tag (the commit stays detached from main)
+          git push origin "$TAG"
+
+          # Reset local main back to before the embedded version commit
+          # This leaves main clean with __VERSION__
+          git reset --hard HEAD~1
+
+      - name: Create GitHub release
+        if: steps.release.outputs.released == 'true'
+        run: |
+          TAG="${{ steps.release.outputs.tag }}"
+
+          # Checkout the tagged commit to get bin/git-wt with embedded version
+          git checkout "$TAG" -- bin/git-wt
+
+          # Create release with the versioned script as asset
+          gh release create "$TAG" \
+            bin/git-wt \
+            --title "$TAG" \
+            --generate-notes
+
+          # Restore bin/git-wt to __VERSION__ (from main)
+          git checkout HEAD -- bin/git-wt
 
   update-homebrew:
     if: needs.release.outputs.released == 'true'
