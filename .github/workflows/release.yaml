@@ -52,18 +52,12 @@ jobs:
             echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Embed version in script
-        if: steps.next-version.outputs.will-release == 'true'
-        run: |
-          # Embed version before release-it commits, so the tagged commit has it
-          sed -i "s/__VERSION__/${{ steps.next-version.outputs.tag }}/" bin/git-wt
-
       - name: Run release-it
         id: release
         if: steps.next-version.outputs.will-release == 'true'
         run: |
           # Run release-it to bump version, update changelog, commit, and tag
-          # The version-embedded script will be included in the commit
+          # Source keeps __VERSION__ placeholder - version embedded only in release asset
           if yarn release-it --ci; then
             echo "released=true" >> "$GITHUB_OUTPUT"
             echo "version=${{ steps.next-version.outputs.version }}" >> "$GITHUB_OUTPUT"
@@ -76,8 +70,11 @@ jobs:
       - name: Create GitHub release
         if: steps.release.outputs.released == 'true'
         run: |
+          # Create versioned copy for release asset (source keeps __VERSION__)
+          cp bin/git-wt /tmp/git-wt
+          sed -i 's/__VERSION__/${{ steps.release.outputs.tag }}/' /tmp/git-wt
           gh release create "${{ steps.release.outputs.tag }}" \
-            bin/git-wt \
+            /tmp/git-wt#git-wt \
             --title "${{ steps.release.outputs.tag }}" \
             --generate-notes
 
@@ -109,12 +106,22 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
-          # Download source tarball and calculate SHA256
-          TARBALL_URL="https://github.com/${{ github.repository }}/archive/refs/tags/${TAG}.tar.gz"
-          echo "Downloading tarball from: $TARBALL_URL"
-          SHA256=$(curl -sL "$TARBALL_URL" | shasum -a 256 | cut -d' ' -f1)
-          echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
-          echo "Successfully got SHA256: $SHA256"
+          # Download release asset and calculate SHA256
+          ASSET_URL="https://github.com/${{ github.repository }}/releases/download/${TAG}/git-wt"
+          echo "Downloading release asset from: $ASSET_URL"
+          # Retry a few times in case of CDN propagation delay
+          for i in {1..5}; do
+            if curl -fsSL "$ASSET_URL" -o /tmp/git-wt; then
+              SHA256=$(shasum -a 256 /tmp/git-wt | cut -d' ' -f1)
+              echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
+              echo "Successfully got SHA256: $SHA256"
+              exit 0
+            fi
+            echo "Attempt $i failed, retrying in 5s..."
+            sleep 5
+          done
+          echo "Failed to download release asset"
+          exit 1
 
       - name: Clone homebrew-devsetup
         run: |
@@ -130,7 +137,7 @@ jobs:
           class GitWt < Formula
             desc 'Interactive TUI for git worktree management'
             homepage 'https://github.com/nsheaps/git-wt'
-            url 'https://github.com/nsheaps/git-wt/archive/refs/tags/${{ steps.release.outputs.tag }}.tar.gz'
+            url 'https://github.com/nsheaps/git-wt/releases/download/${{ steps.release.outputs.tag }}/git-wt'
             sha256 '${{ steps.release.outputs.sha256 }}'
             license 'MIT'
 
@@ -141,7 +148,11 @@ jobs:
             depends_on 'gum'
 
             def install
-              bin.install 'bin/git-wt'
+              if build.head?
+                bin.install 'bin/git-wt'
+              else
+                bin.install 'git-wt'
+              end
             end
 
             test do
