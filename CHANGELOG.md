@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.9](https://github.com/nsheaps/git-wt/compare/v0.4.8...v0.4.9) (2026-01-21)
+
+### Bug Fixes
+
+* use release-it for GitHub releases instead of manual gh command ([945e566](https://github.com/nsheaps/git-wt/commit/945e566e540f4b4c24935c1408746cad2232a9b7))
+
 ## [0.4.8](https://github.com/nsheaps/git-wt/compare/v0.4.7...v0.4.8) (2026-01-21)
 
 ### Bug Fixes
