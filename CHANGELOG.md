@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.3](https://github.com/nsheaps/git-wt/compare/v0.6.2...v0.6.3) (2026-01-21)
+
+### Refactoring
+
+* move formula to template file ([#9](https://github.com/nsheaps/git-wt/issues/9)) ([2298fbc](https://github.com/nsheaps/git-wt/commit/2298fbc54a3df3a4b8f8fb82386c687512a8f24d))
+
 ## [0.6.2](https://github.com/nsheaps/git-wt/compare/v0.6.1...v0.6.2) (2026-01-21)
 
 ### Documentation
