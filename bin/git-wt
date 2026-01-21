@@ -19,6 +19,18 @@
 
 set -euo pipefail
 
+# Version is replaced at release time by CI. For local dev, falls back to git describe.
+GIT_WT_VERSION="__VERSION__"
+
+# Get version: use embedded version if set, otherwise fall back to git describe for local dev
+get_version() {
+  if [[ "$GIT_WT_VERSION" != __"VERSION"__ ]]; then
+    echo "$GIT_WT_VERSION"
+  else
+    git describe --tags --always 2>/dev/null || echo 'dev'
+  fi
+}
+
 SCAN_DIR="${HOME}/src"
 TARGET_BRANCH=""
 UPDATE_CHECK_FILE="/tmp/git-wt-update-check-$$"
@@ -52,7 +64,7 @@ check_for_updates() {
 }
 
 # Start background update check
-CURRENT_VERSION=$(git describe --tags --always 2>/dev/null || echo 'dev')
+CURRENT_VERSION=$(get_version)
 check_for_updates "$CURRENT_VERSION" &
 UPDATE_CHECK_PID=$!
 
@@ -71,7 +83,7 @@ show_update_notification() {
       local new_version="${update_info#UPDATE_AVAILABLE=}"
       echo ""
       gum style --foreground 214 "A new release of git-wt is available: ${CURRENT_VERSION#v} → $new_version"
-      echo "To upgrade, run: npm update -g git-wt"
+      echo "To upgrade, run: brew upgrade git-wt"
     fi
   fi
 }
@@ -86,7 +98,7 @@ while [[ $# -gt 0 ]]; do
   case "$1" in
     --scan-dir) SCAN_DIR="$2"; shift 2 ;;
     -h|--help) show_help ;;
-    -v|--version) echo "git-wt $(git describe --tags --always 2>/dev/null || echo 'dev')"; exit 0 ;;
+    -v|--version) echo "git-wt $(get_version)"; exit 0 ;;
     -*) echo "Unknown option: $1" >&2; show_help ;;
     *) TARGET_BRANCH="$1"; shift ;;
   esac

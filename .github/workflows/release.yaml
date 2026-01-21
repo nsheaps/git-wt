@@ -53,6 +53,11 @@ jobs:
             echo "released=false" >> "$GITHUB_OUTPUT"
           fi
 
+      - name: Embed version in script
+        if: steps.release.outputs.released == 'true'
+        run: |
+          sed -i 's/__VERSION__/${{ steps.release.outputs.tag }}/' bin/git-wt
+
       - name: Create GitHub release
         if: steps.release.outputs.released == 'true'
         run: |
