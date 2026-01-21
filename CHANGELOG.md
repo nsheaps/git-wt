@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.3](https://github.com/nsheaps/git-wt/compare/v0.4.2...v0.4.3) (2026-01-21)
+
+### Bug Fixes
+
+* embed version at release time for correct --version output ([eb316f5](https://github.com/nsheaps/git-wt/commit/eb316f5f0e2f87d1641923f8b38fcd761b555b1b))
+
 ## [0.4.2](https://github.com/nsheaps/git-wt/compare/v0.4.1...v0.4.2) (2026-01-20)
 
 ## [0.4.1](https://github.com/nsheaps/git-wt/compare/v0.4.0...v0.4.1) (2026-01-20)
