@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.4](https://github.com/nsheaps/git-wt/compare/v0.4.3...v0.4.4) (2026-01-21)
+
+### Maintenance
+
+* show chore commits in changelog under Maintenance section ([560026a](https://github.com/nsheaps/git-wt/commit/560026a105d685c9e062d2b06f80b1f6f2d16082))
+
 ## [0.4.3](https://github.com/nsheaps/git-wt/compare/v0.4.2...v0.4.3) (2026-01-21)
 
 ### Bug Fixes
