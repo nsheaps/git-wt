@@ -44,9 +44,6 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
 
-      - name: Create GitHub release
-        run: gh release create "${{ steps.release.outputs.tag }}" --generate-notes
-
   update-homebrew:
     needs: release
     runs-on: ubuntu-latest
