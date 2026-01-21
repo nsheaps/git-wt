@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.2](https://github.com/nsheaps/git-wt/compare/v0.6.1...v0.6.2) (2026-01-21)
+
+### Documentation
+
+* add CLAUDE.md, project rules, and feature specs ([751c0f1](https://github.com/nsheaps/git-wt/commit/751c0f132f6884cb87ba3030984320dfd9fab34f))
+
 ## [0.6.1](https://github.com/nsheaps/git-wt/compare/v0.6.0...v0.6.1) (2026-01-21)
 
 ## [0.6.0](https://github.com/nsheaps/git-wt/compare/v0.5.0...v0.6.0) (2026-01-21)
