@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.16](https://github.com/nsheaps/git-wt/compare/v0.4.15...v0.4.16) (2026-01-21)
+
+### Bug Fixes
+
+* use embedded version for homebrew installs ([33b83b2](https://github.com/nsheaps/git-wt/commit/33b83b2c3151d3e2089157a3448d768dde80dac3))
+
 ## [0.4.15](https://github.com/nsheaps/git-wt/compare/v0.4.14...v0.4.15) (2026-01-21)
 
 ### Bug Fixes

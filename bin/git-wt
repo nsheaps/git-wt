@@ -20,7 +20,7 @@
 set -euo pipefail
 
 # Version - embedded by release-it during release process
-GIT_WT_VERSION="v0.4.13"
+GIT_WT_VERSION="v0.4.16"
 
 # Get version: use git describe only if running from development repo
 get_version() {
