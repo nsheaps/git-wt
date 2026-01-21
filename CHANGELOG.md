@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.8](https://github.com/nsheaps/git-wt/compare/v0.4.7...v0.4.8) (2026-01-21)
+
+### Bug Fixes
+
+* embed version in tagged commit, reset main to placeholder ([#5](https://github.com/nsheaps/git-wt/issues/5)) ([656eb55](https://github.com/nsheaps/git-wt/commit/656eb5562bf2c034269b36d5ca8802e532b70a7e))
+
 ## [0.4.7](https://github.com/nsheaps/git-wt/compare/v0.4.6...v0.4.7) (2026-01-21)
 
 ### Bug Fixes
