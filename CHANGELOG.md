@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.11](https://github.com/nsheaps/git-wt/compare/v0.4.10...v0.4.11) (2026-01-21)
+
+### Bug Fixes
+
+* use detached tag approach for versioned releases ([a9a8cbd](https://github.com/nsheaps/git-wt/commit/a9a8cbd49f1d449d6f7921e36d9c6e65e02b66ab))
+
 ## [0.4.10](https://github.com/nsheaps/git-wt/compare/v0.4.9...v0.4.10) (2026-01-21)
 
 ### Bug Fixes
