@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.7](https://github.com/nsheaps/git-wt/compare/v0.4.6...v0.4.7) (2026-01-21)
+
+### Bug Fixes
+
+* improve release workflow and changelog generation ([#4](https://github.com/nsheaps/git-wt/issues/4)) ([fa00892](https://github.com/nsheaps/git-wt/commit/fa00892748ac21efc9f7350c4259303e7bd119ab))
+
 ## [0.4.6](https://github.com/nsheaps/git-wt/compare/v0.4.5...v0.4.6) (2026-01-21)
 
 ### Bug Fixes
