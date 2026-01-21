@@ -1,3 +1,11 @@
 [tools]
 node = "lts"
 yarn = "4"
+
+[tasks.test]
+description = "Run CLI tests"
+run = "bash test/cli-test.sh"
+
+[tasks.lint]
+description = "Check bash syntax"
+run = "bash -n bin/git-wt"
