@@ -37,26 +37,41 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Run release-it
-        id: release
+      - name: Get next version
+        id: next-version
         run: |
-          # Run release-it to bump version, update changelog, commit, and tag
-          if yarn release-it --ci; then
-            echo "released=true" >> "$GITHUB_OUTPUT"
-            # Get version from the latest git tag (created by release-it)
-            TAG=$(git describe --tags --abbrev=0)
-            VERSION="${TAG#v}"
-            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-            echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          # Get what version release-it would create (without releasing)
+          VERSION=$(yarn release-it --release-version 2>/dev/null || echo "")
+          if [[ -z "$VERSION" ]]; then
+            echo "No release needed"
+            echo "will-release=false" >> "$GITHUB_OUTPUT"
           else
-            echo "No release created"
-            echo "released=false" >> "$GITHUB_OUTPUT"
+            echo "Next version: $VERSION"
+            echo "will-release=true" >> "$GITHUB_OUTPUT"
+            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+            echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
           fi
 
       - name: Embed version in script
-        if: steps.release.outputs.released == 'true'
+        if: steps.next-version.outputs.will-release == 'true'
         run: |
-          sed -i 's/__VERSION__/${{ steps.release.outputs.tag }}/' bin/git-wt
+          # Embed version before release-it commits, so the tagged commit has it
+          sed -i "s/__VERSION__/${{ steps.next-version.outputs.tag }}/" bin/git-wt
+
+      - name: Run release-it
+        id: release
+        if: steps.next-version.outputs.will-release == 'true'
+        run: |
+          # Run release-it to bump version, update changelog, commit, and tag
+          # The version-embedded script will be included in the commit
+          if yarn release-it --ci; then
+            echo "released=true" >> "$GITHUB_OUTPUT"
+            echo "version=${{ steps.next-version.outputs.version }}" >> "$GITHUB_OUTPUT"
+            echo "tag=${{ steps.next-version.outputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "Release failed"
+            echo "released=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Create GitHub release
         if: steps.release.outputs.released == 'true'
@@ -66,9 +81,8 @@ jobs:
             --title "${{ steps.release.outputs.tag }}" \
             --generate-notes
 
-  # NOTE: Homebrew formula updates are handled by Renovate in nsheaps/homebrew-devsetup
   update-homebrew:
-    if: ${{ false }}  # Disabled - Renovate handles this
+    if: needs.release.outputs.released == 'true'
     needs: release
     runs-on: ubuntu-latest
     steps:
