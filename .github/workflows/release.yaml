@@ -141,11 +141,7 @@ jobs:
             depends_on 'gum'
 
             def install
-              if build.head?
-                bin.install 'bin/git-wt'
-              else
-                bin.install 'git-wt'
-              end
+              bin.install 'bin/git-wt'
             end
 
             test do
