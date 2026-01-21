@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.12](https://github.com/nsheaps/git-wt/compare/v0.4.11...v0.4.12) (2026-01-21)
+
+### Bug Fixes
+
+* simplify version handling - use git describe only ([ba455fe](https://github.com/nsheaps/git-wt/commit/ba455fe8c33563275e1d33e021463a33c2400cdc))
+
 ## [0.4.11](https://github.com/nsheaps/git-wt/compare/v0.4.10...v0.4.11) (2026-01-21)
 
 ### Bug Fixes
