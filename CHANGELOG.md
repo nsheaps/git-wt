@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.15](https://github.com/nsheaps/git-wt/compare/v0.4.14...v0.4.15) (2026-01-21)
+
+### Bug Fixes
+
+* upgrade release-it to v19.2.4, switch to yarn v4 ([ef962c5](https://github.com/nsheaps/git-wt/commit/ef962c50676b3ad8fc865e09597fffae309cb8b0))
+
 ## [0.4.14](https://github.com/nsheaps/git-wt/compare/v0.4.13...v0.4.14) (2026-01-21)
 
 ### Bug Fixes
