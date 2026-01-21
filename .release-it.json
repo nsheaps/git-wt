@@ -7,7 +7,9 @@
     "getLatestTagFromAllRefs": true
   },
   "github": {
-    "release": false
+    "release": true,
+    "autoGenerate": true,
+    "assets": ["bin/git-wt"]
   },
   "npm": false,
   "plugins": {

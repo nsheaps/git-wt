@@ -73,15 +73,6 @@ jobs:
             echo "released=false" >> "$GITHUB_OUTPUT"
           fi
 
-      - name: Create GitHub release
-        if: steps.release.outputs.released == 'true'
-        run: |
-          # Upload bin/git-wt which still has the embedded version
-          gh release create "${{ steps.release.outputs.tag }}" \
-            bin/git-wt \
-            --title "${{ steps.release.outputs.tag }}" \
-            --generate-notes
-
       - name: Reset version to placeholder
         if: steps.release.outputs.released == 'true'
         run: |
