@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.10](https://github.com/nsheaps/git-wt/compare/v0.4.9...v0.4.10) (2026-01-21)
+
+### Bug Fixes
+
+* only commit changelog, not bin/git-wt ([aef403e](https://github.com/nsheaps/git-wt/commit/aef403ebefbb6f2623930e4e69b1584d11d54d7b))
+
 ## [0.4.9](https://github.com/nsheaps/git-wt/compare/v0.4.8...v0.4.9) (2026-01-21)
 
 ### Bug Fixes
