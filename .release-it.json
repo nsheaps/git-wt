@@ -1,4 +1,7 @@
 {
+  "hooks": {
+    "before:git:commit": "git reset HEAD bin/git-wt"
+  },
   "git": {
     "commitMessage": "chore: release v${version} [skip ci]",
     "tagName": "v${version}",
