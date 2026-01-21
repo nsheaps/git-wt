@@ -10,8 +10,7 @@
     "getLatestTagFromAllRefs": true
   },
   "github": {
-    "release": true,
-    "autoGenerate": true
+    "release": false
   },
   "npm": false,
   "plugins": {
