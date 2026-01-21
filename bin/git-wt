@@ -20,7 +20,7 @@
 set -euo pipefail
 
 # Version is replaced at release time by CI. For local dev, falls back to git describe.
-GIT_WT_VERSION="v0.4.8"
+GIT_WT_VERSION="__VERSION__"
 
 # Get version: use embedded version if set, otherwise fall back to git describe for local dev
 get_version() {
