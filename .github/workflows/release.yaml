@@ -84,37 +84,15 @@ jobs:
         run: |
           gh repo clone nsheaps/homebrew-devsetup homebrew-devsetup
 
-      - name: Update formula
+      - name: Generate formula from template
         run: |
-          cd homebrew-devsetup
-          cat > Formula/git-wt.rb << FORMULA_EOF
-          # typed: false
-          # frozen_string_literal: true
+          TAG="${{ steps.release.outputs.tag }}"
+          SHA256="${{ steps.release.outputs.sha256 }}"
 
-          class GitWt < Formula
-            desc 'Interactive TUI for git worktree management'
-            homepage 'https://github.com/nsheaps/git-wt'
-            url 'https://github.com/nsheaps/git-wt/archive/refs/tags/${{ steps.release.outputs.tag }}.tar.gz'
-            sha256 '${{ steps.release.outputs.sha256 }}'
-            license 'MIT'
-
-            head do
-              url 'https://github.com/nsheaps/git-wt.git', branch: 'main'
-            end
-
-            depends_on 'gum'
-
-            def install
-              bin.install 'bin/git-wt'
-            end
-
-            test do
-              assert_match 'git-wt', shell_output("#{bin}/git-wt --help")
-            end
-          end
-          FORMULA_EOF
-          # Remove leading whitespace from heredoc
-          sed -i 's/^          //' Formula/git-wt.rb
+          # Read template and substitute variables
+          sed -e "s/{{.Tag}}/${TAG}/g" \
+              -e "s/{{.SHA256}}/${SHA256}/g" \
+              Formula/git-wt.rb.gotmpl > homebrew-devsetup/Formula/git-wt.rb
 
       - name: Create PR to update formula with auto-merge
         env:
