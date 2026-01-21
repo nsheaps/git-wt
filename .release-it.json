@@ -20,7 +20,7 @@
           { "type": "perf", "section": "Performance" },
           { "type": "refactor", "section": "Refactoring" },
           { "type": "docs", "section": "Documentation" },
-          { "type": "chore", "hidden": true }
+          { "type": "chore", "section": "Maintenance" }
         ]
       },
       "infile": "CHANGELOG.md",

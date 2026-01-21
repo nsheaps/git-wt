@@ -10,6 +10,10 @@
 
 ## [0.4.1](https://github.com/nsheaps/git-wt/compare/v0.4.0...v0.4.1) (2026-01-20)
 
+### Maintenance
+
+* remove homebrew PR creation from release workflow ([b4ac3fa](https://github.com/nsheaps/git-wt/commit/b4ac3fa08e89a27d8839c3a8b99a0e15893cc5a1))
+
 ## [0.4.0](https://github.com/nsheaps/git-wt/compare/v0.3.2...v0.4.0) (2026-01-20)
 
 ### Features
