@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.0](https://github.com/nsheaps/git-wt/compare/v0.4.16...v0.5.0) (2026-01-21)
+
+### Features
+
+* show root checkout in worktree list ([5154c47](https://github.com/nsheaps/git-wt/commit/5154c479c05d22a6ce12b67f4e3652d30e02608b))
+
 ## [0.4.16](https://github.com/nsheaps/git-wt/compare/v0.4.15...v0.4.16) (2026-01-21)
 
 ### Bug Fixes
