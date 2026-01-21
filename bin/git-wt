@@ -306,18 +306,21 @@ echo ""
 gum style --bold "Git Worktree Selector"
 echo ""
 
-# Get existing worktrees (excluding main) and track their branches
+# Get existing worktrees (including root checkout) and track their branches
 WORKTREES=()
+ROOT_CHECKOUT=""
 declare -A WORKTREE_BRANCHES
 while IFS= read -r line; do
-  # Skip the main worktree
-  if [[ "$line" != "$GIT_ROOT" ]]; then
+  # Track root checkout separately so it appears first
+  if [[ "$line" == "$GIT_ROOT" ]]; then
+    ROOT_CHECKOUT="$line"
+  else
     WORKTREES+=("$line")
-    # Track which branch this worktree is on for deduplication
-    local_branch=$(git -C "$line" branch --show-current 2>/dev/null || echo "")
-    if [[ -n "$local_branch" ]]; then
-      WORKTREE_BRANCHES["$local_branch"]=1
-    fi
+  fi
+  # Track which branch this worktree is on for deduplication
+  local_branch=$(git -C "$line" branch --show-current 2>/dev/null || echo "")
+  if [[ -n "$local_branch" ]]; then
+    WORKTREE_BRANCHES["$local_branch"]=1
   fi
 done < <(git -C "$GIT_ROOT" worktree list --porcelain | grep "^worktree " | cut -d' ' -f2-)
 
@@ -335,10 +338,16 @@ done < <(git -C "$GIT_ROOT" branch --format='%(refname:short)' 2>/dev/null || ec
 MENU_OPTIONS=()
 MENU_OPTIONS+=("📁 (create new worktree)")
 
-# Add existing worktrees first
+# Add root checkout first (if found)
+if [[ -n "$ROOT_CHECKOUT" ]]; then
+  root_branch=$(git -C "$ROOT_CHECKOUT" branch --show-current 2>/dev/null || echo "detached")
+  MENU_OPTIONS+=("🏠 [root] $root_branch → $ROOT_CHECKOUT")
+fi
+
+# Add existing worktrees
 for wt in "${WORKTREES[@]}"; do
   wt_branch=$(git -C "$wt" branch --show-current 2>/dev/null || echo "detached")
-  MENU_OPTIONS+=("📂 [existing] $wt_branch → $wt")
+  MENU_OPTIONS+=("📂 [worktree] $wt_branch → $wt")
 done
 
 # Add branches (sorted)
@@ -394,11 +403,18 @@ case "$SELECTED" in
     echo "Branch: $BRANCH_NAME (based on $BASE_BRANCH)"
     ;;
 
-  "📂 [existing]"*)
+  "🏠 [root]"*)
     # Extract path from selection
     FINAL_PATH=$(echo "$SELECTED" | sed 's/.*→ //')
     echo ""
-    echo "Selected existing worktree: $FINAL_PATH"
+    echo "Selected root checkout: $FINAL_PATH"
+    ;;
+
+  "📂 [worktree]"*)
+    # Extract path from selection
+    FINAL_PATH=$(echo "$SELECTED" | sed 's/.*→ //')
+    echo ""
+    echo "Selected worktree: $FINAL_PATH"
     ;;
 
   "🔄 (switch repository)")
