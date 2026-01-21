@@ -24,7 +24,10 @@
         ]
       },
       "infile": "CHANGELOG.md",
-      "header": "# Changelog"
+      "header": "# Changelog",
+      "gitRawCommitsOpts": {
+        "firstParent": false
+      }
     }
   }
 }
