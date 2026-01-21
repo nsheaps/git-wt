@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.6](https://github.com/nsheaps/git-wt/compare/v0.4.5...v0.4.6) (2026-01-21)
+
+### Bug Fixes
+
+* use correct install path in homebrew formula template ([#3](https://github.com/nsheaps/git-wt/issues/3)) ([ad01cbe](https://github.com/nsheaps/git-wt/commit/ad01cbe59e1a7d92cdb924efc38e62633176fa67))
+
 ## [0.4.5](https://github.com/nsheaps/git-wt/compare/v0.4.4...v0.4.5) (2026-01-21)
 
 ## [0.4.4](https://github.com/nsheaps/git-wt/compare/v0.4.3...v0.4.4) (2026-01-21)
