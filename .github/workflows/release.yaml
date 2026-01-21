@@ -95,26 +95,12 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
-          # Download asset using gh CLI (more reliable than curl for fresh releases)
-          # Retry up to 5 times with 10s delay to handle CDN propagation
-          for i in {1..5}; do
-            echo "Attempt $i: Downloading release asset..."
-            if gh release download "$TAG" --pattern 'git-wt' --output /tmp/git-wt --clobber; then
-              # Verify it's actually the script (not an error page)
-              if head -1 /tmp/git-wt | grep -q '^#!/'; then
-                SHA256=$(shasum -a 256 /tmp/git-wt | cut -d' ' -f1)
-                echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
-                echo "Successfully got SHA256: $SHA256"
-                exit 0
-              else
-                echo "Downloaded file doesn't look like a script, retrying..."
-              fi
-            fi
-            echo "Download failed or invalid, waiting 10s before retry..."
-            sleep 10
-          done
-          echo "Failed to download release asset after 5 attempts"
-          exit 1
+          # Download source tarball and calculate SHA256
+          TARBALL_URL="https://github.com/${{ github.repository }}/archive/refs/tags/${TAG}.tar.gz"
+          echo "Downloading tarball from: $TARBALL_URL"
+          SHA256=$(curl -sL "$TARBALL_URL" | shasum -a 256 | cut -d' ' -f1)
+          echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
+          echo "Successfully got SHA256: $SHA256"
 
       - name: Clone homebrew-devsetup
         run: |
@@ -128,29 +114,28 @@ jobs:
           # frozen_string_literal: true
 
           class GitWt < Formula
-            desc "Interactive TUI for git worktree management"
-            homepage "https://github.com/nsheaps/git-wt"
-            url "https://github.com/nsheaps/git-wt/releases/download/${{ steps.release.outputs.tag }}/git-wt"
-            sha256 "${{ steps.release.outputs.sha256 }}"
-            version "${{ steps.release.outputs.version }}"
-            license "MIT"
+            desc 'Interactive TUI for git worktree management'
+            homepage 'https://github.com/nsheaps/git-wt'
+            url 'https://github.com/nsheaps/git-wt/archive/refs/tags/${{ steps.release.outputs.tag }}.tar.gz'
+            sha256 '${{ steps.release.outputs.sha256 }}'
+            license 'MIT'
 
             head do
-              url "https://github.com/nsheaps/git-wt.git", branch: "main"
+              url 'https://github.com/nsheaps/git-wt.git', branch: 'main'
             end
 
-            depends_on "gum"
+            depends_on 'gum'
 
             def install
               if build.head?
-                bin.install "bin/git-wt"
+                bin.install 'bin/git-wt'
               else
-                bin.install "git-wt"
+                bin.install 'git-wt'
               end
             end
 
             test do
-              assert_match "git-wt", shell_output("#{bin}/git-wt --help")
+              assert_match 'git-wt', shell_output("#{bin}/git-wt --help")
             end
           end
           FORMULA_EOF
