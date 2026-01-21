@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.4](https://github.com/nsheaps/git-wt/compare/v0.6.3...v0.6.4) (2026-01-21)
+
+### Maintenance
+
+* add renovate config ([0c258a9](https://github.com/nsheaps/git-wt/commit/0c258a994f8148787656c2d6782cba74ad17e39a))
+
 ## [0.6.3](https://github.com/nsheaps/git-wt/compare/v0.6.2...v0.6.3) (2026-01-21)
 
 ### Refactoring
