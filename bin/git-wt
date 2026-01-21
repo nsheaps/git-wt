@@ -20,7 +20,7 @@
 set -euo pipefail
 
 # Version - embedded by release-it, used as fallback when not in git repo
-GIT_WT_VERSION="__VERSION__"
+GIT_WT_VERSION="v0.4.13"
 
 # Get version: try git describe first, fall back to embedded version
 get_version() {

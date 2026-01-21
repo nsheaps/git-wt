@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.13](https://github.com/nsheaps/git-wt/compare/v0.4.12...v0.4.13) (2026-01-21)
+
+### Bug Fixes
+
+* simplify release workflow, embed version via release-it hook ([b4f2aed](https://github.com/nsheaps/git-wt/commit/b4f2aeda37f8da463726974bd2fc1f5799169544))
+
 ## [0.4.12](https://github.com/nsheaps/git-wt/compare/v0.4.11...v0.4.12) (2026-01-21)
 
 ### Bug Fixes
