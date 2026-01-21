@@ -1,14 +1,14 @@
 {
   "git": {
-    "commit": true,
     "commitMessage": "chore: release v${version} [skip ci]",
-    "tag": false,
-    "push": false,
+    "tagName": "v${version}",
+    "tagAnnotation": "Release v${version}",
     "requireCleanWorkingDir": false,
     "getLatestTagFromAllRefs": true
   },
   "github": {
-    "release": false
+    "release": true,
+    "autoGenerate": true
   },
   "npm": false,
   "plugins": {

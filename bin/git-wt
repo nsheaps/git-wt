@@ -19,16 +19,9 @@
 
 set -euo pipefail
 
-# Version is replaced at release time by CI. For local dev, falls back to git describe.
-GIT_WT_VERSION="v0.4.10"
-
-# Get version: use embedded version if set, otherwise fall back to git describe for local dev
+# Get version from git tags - works for git clones, shows "unknown" otherwise
 get_version() {
-  if [[ "$GIT_WT_VERSION" != __"VERSION"__ ]]; then
-    echo "$GIT_WT_VERSION"
-  else
-    git describe --tags --always 2>/dev/null || echo 'dev'
-  fi
+  git describe --tags --always 2>/dev/null || echo "unknown"
 }
 
 SCAN_DIR="${HOME}/src"
