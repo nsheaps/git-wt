@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.0](https://github.com/nsheaps/git-wt/compare/v0.5.0...v0.6.0) (2026-01-21)
+
+### Features
+
+* replace gum with fzf, add delete and PR preview ([5f86077](https://github.com/nsheaps/git-wt/commit/5f86077db6e1ebacb13b8bd6bfbc473b5dd1c20b))
+
 ## [0.5.0](https://github.com/nsheaps/git-wt/compare/v0.4.16...v0.5.0) (2026-01-21)
 
 ### Features
