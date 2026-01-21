@@ -19,9 +19,12 @@
 
 set -euo pipefail
 
-# Get version from git tags - works for git clones, shows "unknown" otherwise
+# Version - embedded by release-it, used as fallback when not in git repo
+GIT_WT_VERSION="__VERSION__"
+
+# Get version: try git describe first, fall back to embedded version
 get_version() {
-  git describe --tags --always 2>/dev/null || echo "unknown"
+  git describe --tags --always 2>/dev/null || echo "$GIT_WT_VERSION"
 }
 
 SCAN_DIR="${HOME}/src"

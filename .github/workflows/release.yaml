@@ -13,7 +13,6 @@ jobs:
   release:
     runs-on: ubuntu-latest
     outputs:
-      released: ${{ steps.release.outputs.released }}
       version: ${{ steps.release.outputs.version }}
       tag: ${{ steps.release.outputs.tag }}
     steps:
@@ -37,37 +36,15 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Get next version
-        id: next-version
-        run: |
-          # Get what version release-it would create (without releasing)
-          VERSION=$(yarn release-it --release-version 2>/dev/null || echo "")
-          if [[ -z "$VERSION" ]]; then
-            echo "No release needed"
-            echo "will-release=false" >> "$GITHUB_OUTPUT"
-          else
-            echo "Next version: $VERSION"
-            echo "will-release=true" >> "$GITHUB_OUTPUT"
-            echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-            echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
-          fi
-
       - name: Run release-it
         id: release
-        if: steps.next-version.outputs.will-release == 'true'
         run: |
-          # release-it handles: changelog, commit, tag, push, GitHub release
-          if yarn release-it --ci; then
-            echo "released=true" >> "$GITHUB_OUTPUT"
-            echo "version=${{ steps.next-version.outputs.version }}" >> "$GITHUB_OUTPUT"
-            echo "tag=${{ steps.next-version.outputs.tag }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "Release failed"
-            echo "released=false" >> "$GITHUB_OUTPUT"
-          fi
+          yarn release-it --ci
+          TAG=$(git describe --tags --abbrev=0)
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
 
   update-homebrew:
-    if: needs.release.outputs.released == 'true'
     needs: release
     runs-on: ubuntu-latest
     steps:
