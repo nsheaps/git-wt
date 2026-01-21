@@ -1,6 +1,6 @@
 {
   "hooks": {
-    "after:bump": "sed -i 's/GIT_WT_VERSION=\"__VERSION__\"/GIT_WT_VERSION=\"v${version}\"/' bin/git-wt"
+    "after:bump": "sed -i 's/^GIT_WT_VERSION=.*/GIT_WT_VERSION=\"v${version}\"/' bin/git-wt"
   },
   "git": {
     "commitMessage": "chore: release v${version} [skip ci]",

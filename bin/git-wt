@@ -19,12 +19,31 @@
 
 set -euo pipefail
 
-# Version - embedded by release-it, used as fallback when not in git repo
+# Version - embedded by release-it during release process
 GIT_WT_VERSION="v0.4.13"
 
-# Get version: try git describe first, fall back to embedded version
+# Get version: use git describe only if running from development repo
 get_version() {
-  git describe --tags --always 2>/dev/null || echo "$GIT_WT_VERSION"
+  local script_path="${BASH_SOURCE[0]}"
+  # Resolve symlinks to get actual script location
+  while [[ -L "$script_path" ]]; do
+    local link_target
+    link_target="$(readlink "$script_path")"
+    if [[ "$link_target" == /* ]]; then
+      script_path="$link_target"
+    else
+      script_path="$(dirname "$script_path")/$link_target"
+    fi
+  done
+  local script_dir
+  script_dir="$(cd "$(dirname "$script_path")/.." && pwd)"
+
+  # Only use git describe if .git exists in repo root (development mode)
+  if [[ -d "$script_dir/.git" ]]; then
+    git -C "$script_dir" describe --tags --always 2>/dev/null || echo "$GIT_WT_VERSION"
+  else
+    echo "$GIT_WT_VERSION"
+  fi
 }
 
 SCAN_DIR="${HOME}/src"
