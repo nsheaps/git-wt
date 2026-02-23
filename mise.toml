@@ -9,3 +9,8 @@ run = "bash test/cli-test.sh"
 [tasks.lint]
 description = "Check bash syntax"
 run = "bash -n bin/git-wt"
+
+[tasks.check]
+description = "Run all checks (lint + test)"
+depends = ["lint", "test"]
+run = "echo 'All checks passed'"
