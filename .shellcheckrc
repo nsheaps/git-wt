@@ -1,0 +1,11 @@
+# ShellCheck configuration for nsheaps/git-wt
+# https://www.shellcheck.net/wiki/
+
+# Default shell dialect — all scripts in this repo are bash.
+shell=bash
+
+# SC1091: Not following sourced files — sourced paths are dynamic
+disable=SC1091
+
+# SC2034: Variable appears unused — some variables are used in tests or exported
+disable=SC2034
