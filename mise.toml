@@ -7,10 +7,18 @@ description = "Run CLI tests"
 run = "bash test/cli-test.sh"
 
 [tasks.lint]
-description = "Check bash syntax"
-run = "bash -n bin/git-wt"
+description = "Run ShellCheck on all bash scripts"
+run = "shellcheck bin/git-wt test/cli-test.sh"
+
+[tasks.fmt]
+description = "Format all bash scripts with shfmt"
+run = "shfmt -w bin/git-wt test/cli-test.sh"
+
+[tasks.fmt-check]
+description = "Check formatting of all bash scripts"
+run = "shfmt -d bin/git-wt test/cli-test.sh"
 
 [tasks.check]
-description = "Run all checks (lint + test)"
-depends = ["lint", "test"]
+description = "Run all checks (lint + fmt-check + test)"
+depends = ["lint", "fmt-check", "test"]
 run = "echo 'All checks passed'"

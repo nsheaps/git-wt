@@ -24,7 +24,7 @@ setup() {
   cd "$TEST_DIR/test-repo"
   git config user.email "test@test.com"
   git config user.name "Test User"
-  echo "initial" > README.md
+  echo "initial" >README.md
   git add README.md
   git commit -m "Initial commit" >/dev/null 2>&1
 
