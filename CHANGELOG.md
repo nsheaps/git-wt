@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.5](https://github.com/nsheaps/git-wt/compare/v0.6.4...v0.6.5) (2026-02-24)
+
+### Maintenance
+
+* add check meta-task to mise for org consistency ([#10](https://github.com/nsheaps/git-wt/issues/10)) ([cfc08a4](https://github.com/nsheaps/git-wt/commit/cfc08a4c3f61d90fe98105e09517931fcec5a673))
+
 ## [0.6.4](https://github.com/nsheaps/git-wt/compare/v0.6.3...v0.6.4) (2026-01-21)
 
 ### Maintenance
