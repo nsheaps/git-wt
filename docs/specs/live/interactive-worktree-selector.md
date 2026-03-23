@@ -11,27 +11,27 @@ The primary interactive TUI for selecting and managing git worktrees using fzf.
 ### Functional Requirements
 
 1. **Worktree Listing**
-   - Display all existing worktrees with their branch names and paths
-   - Show root checkout labeled as `[root]`
-   - Show worktrees labeled as `[worktree]`
+    - Display all existing worktrees with their branch names and paths
+    - Show root checkout labeled as `[root]`
+    - Show worktrees labeled as `[worktree]`
 
 2. **Branch Listing**
-   - Display local branches without worktrees
-   - Display remote branches (with `origin/` prefix stripped in display)
+    - Display local branches without worktrees
+    - Display remote branches (with `origin/` prefix stripped in display)
 
 3. **Selection Interface**
-   - Use fzf for fuzzy-finding selection
-   - Support keyboard navigation
-   - Show preview panel with PR information (if gh CLI available)
+    - Use fzf for fuzzy-finding selection
+    - Support keyboard navigation
+    - Show preview panel with PR information (if gh CLI available)
 
 4. **Actions on Selection**
-   - Switch to existing worktree
-   - Create new worktree for branch without one
-   - Create new branch and worktree
+    - Switch to existing worktree
+    - Create new worktree for branch without one
+    - Create new branch and worktree
 
 5. **Post-Selection Behavior**
-   - Spawn new shell in selected worktree directory
-   - Support `--no-exec` to print path instead
+    - Spawn new shell in selected worktree directory
+    - Support `--no-exec` to print path instead
 
 ### Non-Functional Requirements
 

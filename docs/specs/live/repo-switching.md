@@ -11,16 +11,16 @@ Switch between different git repositories when not already in a repo.
 ### Functional Requirements
 
 1. **Repo Discovery**
-   - Scan configured directory for git repositories
-   - Default scan directory: `~/src`
-   - Configurable via `--scan-dir DIR`
+    - Scan configured directory for git repositories
+    - Default scan directory: `~/src`
+    - Configurable via `--scan-dir DIR`
 
 2. **Repo Selection**
-   - Use fzf for fuzzy-finding repos
-   - Display repo paths for selection
+    - Use fzf for fuzzy-finding repos
+    - Display repo paths for selection
 
 3. **Post-Selection**
-   - Continue to normal worktree selector for chosen repo
+    - Continue to normal worktree selector for chosen repo
 
 ### Non-Functional Requirements
 

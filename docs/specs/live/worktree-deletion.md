@@ -11,22 +11,22 @@ Delete git worktrees with appropriate safety confirmations.
 ### Functional Requirements
 
 1. **Delete Command**
-   - `git-wt d [branch]` to delete worktree for specified branch
-   - Cannot delete root checkout
+    - `git-wt d [branch]` to delete worktree for specified branch
+    - Cannot delete root checkout
 
 2. **Interactive Mode**
-   - Show confirmation prompt via gum
-   - If uncommitted changes, show force confirmation
-   - Use gum spinner during deletion
+    - Show confirmation prompt via gum
+    - If uncommitted changes, show force confirmation
+    - Use gum spinner during deletion
 
 3. **Non-Interactive Mode**
-   - Require `--force` flag
-   - Fail with helpful error if `--force` not provided
+    - Require `--force` flag
+    - Fail with helpful error if `--force` not provided
 
 4. **Error Handling**
-   - Error if branch has no worktree
-   - Error if trying to delete root checkout
-   - Handle uncommitted changes gracefully
+    - Error if branch has no worktree
+    - Error if trying to delete root checkout
+    - Handle uncommitted changes gracefully
 
 ### Non-Functional Requirements
 
