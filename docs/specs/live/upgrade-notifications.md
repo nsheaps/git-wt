@@ -11,22 +11,22 @@ Background check for new releases with non-intrusive notification.
 ### Functional Requirements
 
 1. **Background Check**
-   - Check GitHub releases API asynchronously
-   - Do not block main script execution
-   - Cache/throttle to avoid excessive API calls
+    - Check GitHub releases API asynchronously
+    - Do not block main script execution
+    - Cache/throttle to avoid excessive API calls
 
 2. **Version Comparison**
-   - Compare current version against latest release
-   - Only notify if newer version available
+    - Compare current version against latest release
+    - Only notify if newer version available
 
 3. **Notification Display**
-   - Show at script exit (after main operation completes)
-   - Display current version and available version
-   - Provide upgrade command
+    - Show at script exit (after main operation completes)
+    - Display current version and available version
+    - Provide upgrade command
 
 4. **Suppression**
-   - Do NOT show in non-interactive mode
-   - Only show when TTY available
+    - Do NOT show in non-interactive mode
+    - Only show when TTY available
 
 ### Non-Functional Requirements
 

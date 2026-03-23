@@ -38,11 +38,28 @@ jobs:
 
       - name: Run release-it
         id: release
+        env:
+          GITHUB_TOKEN: ${{ steps.auth.outputs.token }}
         run: |
           yarn release-it --ci
           TAG=$(git describe --tags --abbrev=0)
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "version=${TAG#v}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload release assets
+        env:
+          GITHUB_TOKEN: ${{ steps.auth.outputs.token }}
+        run: |
+          TAG="${{ steps.release.outputs.tag }}"
+          # git-wt is a platform-independent bash script, but ubi (used by
+          # mise) expects assets named with OS/arch patterns. Upload copies
+          # for each supported platform so `mise install ubi:nsheaps/git-wt`
+          # works out of the box.
+          for platform in linux-amd64 linux-arm64 darwin-amd64 darwin-arm64; do
+            cp bin/git-wt "git-wt-${platform}"
+          done
+          gh release upload "$TAG" git-wt-linux-amd64 git-wt-linux-arm64 git-wt-darwin-amd64 git-wt-darwin-arm64
+          rm -f git-wt-linux-amd64 git-wt-linux-arm64 git-wt-darwin-amd64 git-wt-darwin-arm64
 
   update-homebrew:
     needs: release
@@ -72,11 +89,10 @@ jobs:
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
           # Download archive tarball and calculate SHA256
-          # Archive is available instantly (no CDN delay like release assets)
           TARBALL_URL="https://github.com/${{ github.repository }}/archive/refs/tags/${TAG}.tar.gz"
           echo "Downloading tarball from: $TARBALL_URL"
           curl -fsSL "$TARBALL_URL" -o /tmp/archive.tar.gz
-          SHA256=$(shasum -a 256 /tmp/archive.tar.gz | cut -d' ' -f1)
+          SHA256=$(sha256sum /tmp/archive.tar.gz | cut -d' ' -f1)
           echo "sha256=$SHA256" >> "$GITHUB_OUTPUT"
           echo "Successfully got SHA256: $SHA256"
 
@@ -96,7 +112,17 @@ jobs:
         run: |
           gomplate -f Formula/git-wt.rb.gotmpl -o homebrew-devsetup/Formula/git-wt.rb
 
-      - name: Create PR to update formula with auto-merge
+      - name: Close stale formula PRs
+        run: |
+          cd homebrew-devsetup
+          # Close any open PRs from previous formula updates — they're superseded
+          gh pr list --state open --search "chore: update git-wt to" --json number,title --jq '.[].number' | while read -r pr_num; do
+            echo "Closing superseded PR #${pr_num}"
+            gh pr close "$pr_num" --comment "Superseded by v${{ steps.release.outputs.version }} update."
+          done
+
+      - name: Create PR to update formula
+        id: formula-pr
         env:
           RELEASE_URL: https://github.com/${{ github.repository }}/releases/tag/${{ steps.release.outputs.tag }}
           JOB_URL: ${{ env.GITHUB_JOB_URL }}
@@ -105,22 +131,37 @@ jobs:
         run: |
           cd homebrew-devsetup
           BRANCH="bump-git-wt-${VERSION}"
+
+          # Delete remote branch if it exists from a previous failed run
+          git push origin --delete "$BRANCH" 2>/dev/null || true
+
           git checkout -b "$BRANCH"
           git add Formula/git-wt.rb
           git commit -m "chore: update git-wt to ${VERSION}"
           git push -u origin "$BRANCH"
 
-          # Create PR body file
-          cat > /tmp/pr-body.md << 'BODY_EOF'
-          Automated formula update from git-wt release
-          BODY_EOF
-          echo "" >> /tmp/pr-body.md
-          echo "**Release:** ${RELEASE_URL}" >> /tmp/pr-body.md
-          echo "**Workflow:** ${JOB_URL}" >> /tmp/pr-body.md
+          printf 'Automated formula update from git-wt release\n\n**Release:** %s\n**Workflow:** %s\n' "$RELEASE_URL" "$JOB_URL" > /tmp/pr-body.md
 
           PR_URL=$(gh pr create \
             --title "chore: update git-wt to ${VERSION}" \
             --body-file /tmp/pr-body.md \
             --base main)
-          # Enable auto-merge with squash
-          gh pr merge "$PR_URL" --auto --squash
+          echo "pr_url=$PR_URL" >> "$GITHUB_OUTPUT"
+
+      - name: Enable auto-merge with retry
+        env:
+          PR_URL: ${{ steps.formula-pr.outputs.pr_url }}
+        run: |
+          # Retry auto-merge — CI checks on the target repo need time to start,
+          # and the GraphQL API rejects enablePullRequestAutoMerge while the PR
+          # is in "unstable" (checks pending) status.
+          for attempt in 1 2 3 4 5; do
+            if gh pr merge "$PR_URL" --auto --squash; then
+              echo "Auto-merge enabled successfully on attempt ${attempt}"
+              exit 0
+            fi
+            wait=$((attempt * 10))
+            echo "Auto-merge not ready (attempt ${attempt}/5), waiting ${wait}s..."
+            sleep "$wait"
+          done
+          echo "::warning::Could not enable auto-merge after 5 attempts. PR was created successfully at ${PR_URL} — merge manually or re-run."

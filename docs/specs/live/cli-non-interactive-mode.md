@@ -11,26 +11,26 @@ Command-line interface for scripting and non-TTY environments.
 ### Functional Requirements
 
 1. **TTY Detection**
-   - Detect when stdin/stdout are not TTY
-   - Automatically switch to non-interactive behavior
+    - Detect when stdin/stdout are not TTY
+    - Automatically switch to non-interactive behavior
 
 2. **Usage Display (no arguments)**
-   - Print usage information
-   - List existing worktrees with paths
-   - List branches without worktrees
+    - Print usage information
+    - List existing worktrees with paths
+    - List branches without worktrees
 
 3. **Branch Switch (`git-wt [branch]`)**
-   - Create worktree if doesn't exist
-   - Print worktree path to stdout (for `cd "$(git-wt branch)"`)
-   - Silent operation (no interactive prompts)
+    - Create worktree if doesn't exist
+    - Print worktree path to stdout (for `cd "$(git-wt branch)"`)
+    - Silent operation (no interactive prompts)
 
 4. **Exec Flags**
-   - `--exec` - Spawn shell in worktree (override default)
-   - `--no-exec` - Print path only (default in CLI mode)
+    - `--exec` - Spawn shell in worktree (override default)
+    - `--no-exec` - Print path only (default in CLI mode)
 
 5. **Error Handling**
-   - Exit with non-zero status on errors
-   - Print errors to stderr
+    - Exit with non-zero status on errors
+    - Print errors to stderr
 
 ### Non-Functional Requirements
 
@@ -58,8 +58,8 @@ cd "$(git-wt feature-branch)"
 
 ### Usage Output
 ```
-Usage: git-wt [branch]       Switch to or create worktree
-       git-wt d [branch]     Delete worktree (requires --force)
+Usage: git-wt [branch]        Switch to or create worktree
+      git-wt d [branch]       Delete worktree (requires --force)
 
 Options:
   --exec      Spawn shell in worktree (instead of printing path)
