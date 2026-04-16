@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.9](https://github.com/nsheaps/git-wt/compare/v0.6.8...v0.6.9) (2026-04-16)
+
+### Maintenance
+
+* **deps:** update qoomon/actions--context action to v5 ([#15](https://github.com/nsheaps/git-wt/issues/15)) ([e430eed](https://github.com/nsheaps/git-wt/commit/e430eed35e60abe580afd32517c7db5a5e2df5de))
+
 ## [0.6.8](https://github.com/nsheaps/git-wt/compare/v0.6.7...v0.6.8) (2026-04-15)
 
 ### Maintenance
