@@ -71,7 +71,7 @@ jobs:
 
       - name: Get job context
         id: context
-        uses: qoomon/actions--context@v4
+        uses: qoomon/actions--context@v5
 
       - name: Authenticate as GitHub App
         id: auth
