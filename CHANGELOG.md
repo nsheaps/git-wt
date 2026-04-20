@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.11](https://github.com/nsheaps/git-wt/compare/v0.6.10...v0.6.11) (2026-04-20)
+
+### Maintenance
+
+* **deps:** update yarn to v4.13.0 ([#19](https://github.com/nsheaps/git-wt/issues/19)) ([8349573](https://github.com/nsheaps/git-wt/commit/834957334c71a8c064643dcbd197efca4d03236e))
+
 ## [0.6.10](https://github.com/nsheaps/git-wt/compare/v0.6.9...v0.6.10) (2026-04-17)
 
 ### Maintenance
