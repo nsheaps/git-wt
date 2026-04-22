@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.13](https://github.com/nsheaps/git-wt/compare/v0.6.12...v0.6.13) (2026-04-22)
+
+### Maintenance
+
+* **deps:** update jdx/mise-action action to v4 ([#21](https://github.com/nsheaps/git-wt/issues/21)) ([6940cc7](https://github.com/nsheaps/git-wt/commit/6940cc7d44580af63f1ce584a954d6ab6296e447))
+
 ## [0.6.11](https://github.com/nsheaps/git-wt/compare/v0.6.10...v0.6.11) (2026-04-20)
 
 ### Maintenance
