@@ -1053,7 +1053,7 @@ __metadata:
   resolution: "git-wt@workspace:."
   dependencies:
     "@release-it/conventional-changelog": "npm:^11.0.0"
-    release-it: "npm:^20.0.0"
+    release-it: "npm:^20.0.1"
   languageName: unknown
   linkType: soft
 
@@ -1607,7 +1607,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"release-it@npm:^20.0.0":
+"release-it@npm:^20.0.1":
   version: 20.0.1
   resolution: "release-it@npm:20.0.1"
   dependencies:
