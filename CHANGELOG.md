@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.15](https://github.com/nsheaps/git-wt/compare/v0.6.14...v0.6.15) (2026-05-25)
+
+### Maintenance
+
+* **deps:** update dependency @release-it/conventional-changelog to v11 ([#25](https://github.com/nsheaps/git-wt/issues/25)) ([d17d22d](https://github.com/nsheaps/git-wt/commit/d17d22da17daad696668f55141a364f0d23e59d7))
+
 ## [0.6.14](https://github.com/nsheaps/git-wt/compare/v0.6.13...v0.6.14) (2026-05-18)
 
 ### Maintenance
