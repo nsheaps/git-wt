@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.31](https://github.com/nsheaps/git-wt/compare/v0.6.30...v0.6.31) (2026-06-19)
+
+### Maintenance
+
+* **deps:** update yarn monorepo to v4.15.0 ([#28](https://github.com/nsheaps/git-wt/issues/28)) ([b8f9de5](https://github.com/nsheaps/git-wt/commit/b8f9de5f0332d46137b9f5285537bd113c8cf823))
+
 ## [0.6.30](https://github.com/nsheaps/git-wt/compare/v0.6.29...v0.6.30) (2026-06-01)
 
 ## [0.6.29](https://github.com/nsheaps/git-wt/compare/v0.6.28...v0.6.29) (2026-06-01)
