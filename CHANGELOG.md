@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.36](https://github.com/nsheaps/git-wt/compare/v0.6.35...v0.6.36) (2026-07-17)
+
+### Maintenance
+
+* **deps:** update actions/checkout action to v7 ([#33](https://github.com/nsheaps/git-wt/issues/33)) ([1236578](https://github.com/nsheaps/git-wt/commit/1236578a3520a185239b8efef664f632bd60f174))
+
 ## [0.6.35](https://github.com/nsheaps/git-wt/compare/v0.6.34...v0.6.35) (2026-07-15)
 
 ### Maintenance
