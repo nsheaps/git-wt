@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.6.45](https://github.com/nsheaps/git-wt/compare/v0.6.44...v0.6.45) (2026-08-11)
+
 ## [0.6.44](https://github.com/nsheaps/git-wt/compare/v0.6.43...v0.6.44) (2026-08-11)
 
 ## [0.6.43](https://github.com/nsheaps/git-wt/compare/v0.6.42...v0.6.43) (2026-08-10)
