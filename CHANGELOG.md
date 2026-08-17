@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.51](https://github.com/nsheaps/git-wt/compare/v0.6.50...v0.6.51) (2026-08-17)
+
+### Maintenance
+
+* **deps:** update nsheaps + squink github actions ([4bbbde9](https://github.com/nsheaps/git-wt/commit/4bbbde968216aa8972f606d67fe4775699010a02))
+
 ## [0.6.50](https://github.com/nsheaps/git-wt/compare/v0.6.49...v0.6.50) (2026-08-17)
 
 ## [0.6.49](https://github.com/nsheaps/git-wt/compare/v0.6.48...v0.6.49) (2026-08-14)
