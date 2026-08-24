@@ -1,5 +1,7 @@
 # Changelog
 
+## [0.6.54](https://github.com/nsheaps/git-wt/compare/v0.6.53...v0.6.54) (2026-08-24)
+
 ## [0.6.53](https://github.com/nsheaps/git-wt/compare/v0.6.52...v0.6.53) (2026-08-20)
 
 ### Maintenance
