@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.59](https://github.com/nsheaps/git-wt/compare/v0.6.58...v0.6.59) (2026-08-30)
+
+### Maintenance
+
+* **deps:** update dependency release-it to ^21.0.1 ([#39](https://github.com/nsheaps/git-wt/issues/39)) ([f9c938e](https://github.com/nsheaps/git-wt/commit/f9c938e9feb248a488ea001a9fca099715f811fc))
+
 ## [0.6.58](https://github.com/nsheaps/git-wt/compare/v0.6.57...v0.6.58) (2026-08-28)
 
 ### Maintenance
