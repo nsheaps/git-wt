@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.70](https://github.com/nsheaps/git-wt/compare/v0.6.69...v0.6.70) (2026-10-14)
+
+### Maintenance
+
+* **deps:** update all patch updates ([#42](https://github.com/nsheaps/git-wt/issues/42)) ([49b856d](https://github.com/nsheaps/git-wt/commit/49b856dfbb2b7bb09890d8c6ae3f7a9d4832e0eb)), references [#8203](https://github.com/nsheaps/git-wt/issues/8203)
+
 ## [0.6.69](https://github.com/nsheaps/git-wt/compare/v0.6.68...v0.6.69) (2026-10-13)
 
 ### Maintenance
