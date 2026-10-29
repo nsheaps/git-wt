@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.79](https://github.com/nsheaps/git-wt/compare/v0.6.78...v0.6.79) (2026-10-29)
+
+### Maintenance
+
+* **deps:** update nsheaps/agents digest to 31faa49 ([836d056](https://github.com/nsheaps/git-wt/commit/836d056f6d1b6101cbe1dd30e00c50b8cbb95f2d))
+
 ## [0.6.78](https://github.com/nsheaps/git-wt/compare/v0.6.77...v0.6.78) (2026-10-29)
 
 ### Maintenance
